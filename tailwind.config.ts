@@ -7,6 +7,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    './@/**/*.{ts,tsx}', // <- HERE
 	],
   prefix: "",
   theme: {
@@ -52,6 +53,9 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+      backgroundImage: {
+        'radial-gradient': 'radial-gradient(circle, #32328c, #242469, #161646, #0a0a23, #000012)',
       },
       borderRadius: {
         lg: "var(--radius)",
