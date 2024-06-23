@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useTransition } from "react";
 import { CardWrapper } from "@/components/cardWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,7 +8,8 @@ import { z } from "zod";
 import { LoginSchema } from "@/middleware/schema";
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import Flash from "@/components/auth/formFlash"
+import Flash, { type formFlashProps } from "@/components/auth/formFlash"
+import { login } from "@/actions/login"
 import {
   Form,
   FormControl,
@@ -19,6 +21,9 @@ import {
 
 
 export function LoginForm() {
+  const [isPending, startTransition] = useTransition();
+  const [ flash, setFlash ] = useState<formFlashProps>({message: ""});
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -28,7 +33,12 @@ export function LoginForm() {
   })
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    console.log(values)
+    setFlash({message: ""});
+
+    startTransition(() => {
+      login(values)
+        .then(data => setFlash(data));
+    })
   }
 
   return (
@@ -43,7 +53,7 @@ export function LoginForm() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6"
           >
-            <Flash message="Email taken" type="success"/>
+            <Flash {...flash}/>
             <div className="space-y-4">
               <FormField
                 control={form.control}
@@ -54,6 +64,7 @@ export function LoginForm() {
                     <FormControl>
                       <Input
                         {...field}
+                        disabled={isPending}
                         placeholder="surname.name@example.com"
                         type="email"
                       />
@@ -71,6 +82,7 @@ export function LoginForm() {
                     <FormControl>
                       <Input
                         {...field}
+                        disabled={isPending}
                         placeholder="******"
                         type="password"
                       />
@@ -83,6 +95,7 @@ export function LoginForm() {
             <Button
               type="submit"
               className="w-full"
+              disabled={isPending}
             >
               Login
             </Button>

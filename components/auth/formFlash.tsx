@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils"
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { HiOutlineExclamationTriangle } from "react-icons/hi2";
 
-type formFlashProps = {
+export type formFlashProps = {
   message?: String;
   type?: "success" | "error"
 }
