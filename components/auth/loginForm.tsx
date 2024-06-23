@@ -5,7 +5,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { LoginSchema } from "@/middleware/schema";
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import Flash from "@/components/auth/formFlash"
 import {
   Form,
   FormControl,
@@ -25,6 +27,10 @@ export function LoginForm() {
     }
   })
 
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    console.log(values)
+  }
+
   return (
     <CardWrapper
         headerLabel="Login"
@@ -34,9 +40,10 @@ export function LoginForm() {
     >
         <Form {...form}>
           <form 
-            onSubmit={form.handleSubmit(() => {})}
+            onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6"
           >
+            <Flash message="Email taken" type="success"/>
             <div className="space-y-4">
               <FormField
                 control={form.control}
@@ -73,6 +80,12 @@ export function LoginForm() {
                 )}
               />
             </div>
+            <Button
+              type="submit"
+              className="w-full"
+            >
+              Login
+            </Button>
           </form>
         </Form>
     </CardWrapper>
