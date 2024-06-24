@@ -1,5 +1,18 @@
-export default function page() {
+import { auth, signOut } from "@/middleware/auth"
+
+export default async function page() {
+  const session = await auth();
+
   return (
-    <div>dashpoard</div>
+    <div>
+      <form action={async () => {
+        "use server"
+
+        await signOut();
+      }}>
+        <button type="submit">Sign out</button>
+      </form>
+      {JSON.stringify(session)}
+    </div>
   )
 }

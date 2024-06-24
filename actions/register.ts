@@ -7,11 +7,11 @@ import { db, getUserByEmail } from "@/lib/db";
 
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
-    const validatedFields = RegisterSchema.safeParse(values);
+    const checkedFields = RegisterSchema.safeParse(values);
 
-    if(!validatedFields) return { type: 'error', message: "Invalid fields!"} as formFlashProps;
+    if(!checkedFields) return { type: 'error', message: "Invalid fields!"} as formFlashProps;
 
-    const { username, email, password } = validatedFields.data as typeof values;
+    const { username, email, password } = checkedFields.data as typeof values;
     const hashedPassword = await bcrypt.hash(password, 10);
     
     const existingUser = await getUserByEmail(email);
