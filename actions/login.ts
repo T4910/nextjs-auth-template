@@ -24,8 +24,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
             switch(error.type){
                 case "CallbackRouteError":
                     return { type: 'error', message: "Invalid credentials!"}
-
-                case "CredentialsSignin": //! it is seeing CallbackRouteError not CredentialsSignin
+                case "CredentialsSignin": //! it is seeing CallbackRouteError instead of CredentialsSignin
                     return { type: 'error', message: "Invalid credentials!"}
                 default:
                     return { type: 'error', message: "Something went  wrong!"}
