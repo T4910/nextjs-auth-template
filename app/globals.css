@@ -74,6 +74,5 @@
   }
   body {
     @apply bg-background text-foreground;
-    color: #ff0000;
   }
 }

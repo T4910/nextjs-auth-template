@@ -13,7 +13,7 @@ export function LinkButton({
   return (
     <Button
         variant="link"
-        className="font-normal w-full"
+        className="font-normal w-full underline"
         size="sm"
         asChild
     >

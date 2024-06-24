@@ -23,11 +23,11 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
             console.log(error.type, 778)
             switch(error.type){
                 case "CallbackRouteError":
-                    return { type: 'error', message: "Invalid credentials!"}
+                    return { type: 'error', message: "Invalid credentials!"} as formFlashProps;
                 case "CredentialsSignin": //! it is seeing CallbackRouteError instead of CredentialsSignin
-                    return { type: 'error', message: "Invalid credentials!"}
+                    return { type: 'error', message: "Invalid credentials!"} as formFlashProps;
                 default:
-                    return { type: 'error', message: "Something went  wrong!"}
+                    return { type: 'error', message: "Something went  wrong!"} as formFlashProps;
             }
         }
 
