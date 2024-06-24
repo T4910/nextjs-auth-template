@@ -13,7 +13,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
     const { username, email, password } = validatedFields.data as typeof values;
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    
     const existingUser = await getUserByEmail(email);
 
     if(existingUser) return { type: 'error', message: "User already exists"} as formFlashProps;
