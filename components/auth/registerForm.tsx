@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Flash, { type formFlashProps } from "@/components/auth/formFlash"
 import { register } from "@/actions/register"
+import { login } from "@/actions/login"
 import {
   Form,
   FormControl,
@@ -39,14 +40,26 @@ export function RegisterForm() {
 
     startTransition(() => {
       register(values)
-        .then(data => setFlash(data));
+        .then(async data => {
+          if(data?.type === "error"){
+            setFlash(data);
+            return;
+          }
+          
+          const loginResponse = await login({ 
+            email: values.email, 
+            password: values.password 
+          });
+
+          if(loginResponse?.type === "error") setFlash(loginResponse as formFlashProps);
+        });
     })
   }
 
   return (
     <CardWrapper
         headerLabel="Register"
-        backBtnLabel="Have an account? Login in"
+        backBtnLabel="Have an account? Login"
         backBtnHref="/login"
         showOtherAuth
     >
