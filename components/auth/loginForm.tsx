@@ -66,7 +66,7 @@ export function LoginForm() {
                         {...field}
                         disabled={isPending}
                         placeholder="surname.name@example.com"
-                        type="email"
+                        type="text"
                       />
                     </FormControl>
                     <FormMessage />
