@@ -40,19 +40,7 @@ export function RegisterForm() {
 
     startTransition(() => {
       register(values)
-        .then(async data => {
-          if(data?.type === "error"){
-            setFlash(data);
-            return;
-          }
-          
-          const loginResponse = await login({ 
-            email: values.email, 
-            password: values.password 
-          });
-
-          if(loginResponse?.type === "error") setFlash(loginResponse as formFlashProps);
-        });
+        .then(data => setFlash(data));
     })
   }
 
@@ -70,45 +58,44 @@ export function RegisterForm() {
           >
             <Flash {...flash}/>
             <div className="space-y-4">
-                <div className="flex space-x-2">
-                    <FormField
-                        control={form.control}
-                        name="username"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Username</FormLabel>
-                            <FormControl>
-                            <Input
-                                {...field}
-                                disabled={isPending}
-                                placeholder="surname123"
-                                type="text"
-                            />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                            <Input
-                                {...field}
-                                disabled={isPending}
-                                placeholder="surname.name@example.com"
-                                type="email"
-                            />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-
-                </div>
+              <div className="flex space-x-2">
+                  <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem>
+                          <FormLabel>Username</FormLabel>
+                          <FormControl>
+                          <Input
+                              {...field}
+                              disabled={isPending}
+                              placeholder="surname123"
+                              type="text"
+                          />
+                          </FormControl>
+                          <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                          <Input
+                              {...field}
+                              disabled={isPending}
+                              placeholder="surname.name@example.com"
+                              type="email"
+                          />
+                          </FormControl>
+                          <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+              </div>
               <FormField
                 control={form.control}
                 name="password"

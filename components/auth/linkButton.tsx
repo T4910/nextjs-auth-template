@@ -1,15 +1,12 @@
-import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 type linkButtonProps = {
     label: string,
     href: string
 }
 
-export function LinkButton({
-    href,
-    label
-}: linkButtonProps) {
+export function LinkButton({ href, label }: linkButtonProps) {
   return (
     <Button
         variant="link"

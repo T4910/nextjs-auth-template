@@ -1,10 +1,9 @@
 "use client"
-
-import React from "react"
+import { ReactNode } from "react"
 import { useRouter } from "next/navigation"
 
 type showloginWrapperProps = {
-    children: React.ReactNode,
+    children: ReactNode,
     mode?: "modal" | "redirect",
     asChild?: boolean
 }
@@ -16,15 +15,9 @@ export function ShowLoginWrapper({
 }: showloginWrapperProps) {
     const router = useRouter();
 
-    const sendToLogin = () => {
-        router.push("/login");
-    }
+    const sendToLogin = () => router.push("/login");
 
-    if(mode === "modal") {
-        return (
-            <span>Add a modal of a login here...</span>
-        );
-    }
+    if(mode === "modal") return <span>Add a modal of a login here...</span>;
 
     return (
         <span onClick={sendToLogin} className="cursor-pointer">

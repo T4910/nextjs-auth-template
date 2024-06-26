@@ -1,15 +1,15 @@
 "use client"
-
-import { useState, useTransition } from "react";
-import { CardWrapper } from "@/components/cardWrapper";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { LoginSchema } from "@/middleware/schema";
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import Flash, { type formFlashProps } from "@/components/auth/formFlash"
 import { login } from "@/actions/login"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { useForm } from "react-hook-form";
+import { CardWrapper } from "@/components/cardWrapper";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema } from "@/middleware/schema";
+import { useSearchParams } from "next/navigation";
+import { useState, useTransition } from "react";
+import Flash, { type formFlashProps } from "@/components/auth/formFlash"
 import {
   Form,
   FormControl,
@@ -18,11 +18,31 @@ import {
   FormLabel,
   FormMessage
 } from "@/components/ui/form";
+import { url } from "inspector";
 
 
 export function LoginForm() {
+  const searchParams = useSearchParams();
+  const urlError = searchParams.get('error');
+  let urlErrorDisplayMessage;
+  
+  // For nextauth errors
+  switch (urlError) {
+    case 'OAuthAccountNotLinked':
+      urlErrorDisplayMessage = "Email already in use with different provider";
+      break;
+    
+    case null:
+      urlErrorDisplayMessage = null;
+      break;
+
+    default:
+      urlErrorDisplayMessage = "Something went wrong!";
+      break;
+  }
+
+  const [ flash, setFlash ] = useState<formFlashProps>({ message: urlErrorDisplayMessage || "" });
   const [isPending, startTransition] = useTransition();
-  const [ flash, setFlash ] = useState<formFlashProps>({message: ""});
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -30,7 +50,7 @@ export function LoginForm() {
       email: "",
       password: ""
     }
-  })
+  });
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setFlash({message: ""});
@@ -38,7 +58,8 @@ export function LoginForm() {
     startTransition(() => {
       login(values)
         .then(data => setFlash(data));
-    })
+        // TODO: Add 2FA
+    });
   }
 
   return (
@@ -102,5 +123,5 @@ export function LoginForm() {
           </form>
         </Form>
     </CardWrapper>
-  )
+  );
 }

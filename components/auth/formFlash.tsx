@@ -7,7 +7,7 @@ export type formFlashProps = {
   type?: "success" | "error"
 }
 
-export default function formFlash({message, type = "success"}: formFlashProps) {
+export default function formFlash({message, type = "error"}: formFlashProps) {
   if(!(!!message)) return
 
   return (
@@ -18,7 +18,6 @@ export default function formFlash({message, type = "success"}: formFlashProps) {
         "p-3 rounded-md flex items-center gap-x-2 text-sm"
       )}
     >
-
       {(type === "error") && <HiOutlineExclamationTriangle className="size-5"/>}
       {(type === "success") &&  <IoIosCheckmarkCircleOutline className="size-5"/>}
       <p>{message}</p>

@@ -1,17 +1,16 @@
-// "use client"
-import React from "react"
+import { ReactNode } from "react"
+import { Header } from "@/components/header"
+import { OtherAuth } from "@/components/auth/otherAuth"
+import { LinkButton } from "@/components/auth/linkButton"
 import { 
     Card,
     CardHeader,
     CardContent,
     CardFooter
 } from "@/components/ui/card"
-import { Header } from "@/components/header"
-import { OtherAuth } from "@/components/auth/otherAuth"
-import { LinkButton } from "@/components/auth/linkButton"
 
 type CardWrapperProps = {
-    children: React.ReactNode,
+    children: ReactNode,
     headerLabel: string,
     backBtnLabel: string,
     backBtnHref: string,
