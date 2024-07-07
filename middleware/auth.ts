@@ -1,8 +1,10 @@
 import NextAuth, { type DefaultSession } from "next-auth";
 import authConfig from "@/middleware/auth.config";
-import { db, getUserById } from "@/lib/db"
+import { db } from "@/lib/db"
+import { getUserById } from "@/lib/user";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Roles } from "@prisma/client";
+import credentials from "next-auth/providers/credentials";
 
 export type ExtendedUser = DefaultSession["user"] & {
     role: Roles
@@ -18,9 +20,21 @@ export const {
     handlers: { GET, POST  },
     auth, signIn, signOut,
 } = NextAuth({
+    pages:{
+        signIn: "/login",
+        error: "/login"
+    },
+    events:{
+        async linkAccount({ user }) {
+            await db.user.update({
+                where: { id: user?.id },
+                data: { emailVerified: new Date() }
+            })
+        }
+    },
     callbacks:{
-        async jwt({token}){
-            if(!token.sub) return token;
+        async jwt({ token }){
+            if(!token?.sub) return token;
 
             const user = await getUserById(token?.sub as string);
 
@@ -38,13 +52,19 @@ export const {
             console.log(session);
             return session;
         },
-        // async signIn({ user }){
-        //     const existingUser = await getUserById(user.id);
+        async signIn({ user, account }){
+            if(account?.provider == 'credentials'){
+                const existingUser = await getUserById(user?.id as string);
+    
+                if(!existingUser || !existingUser.emailVerified){
+                    return false // if email is not verified, do not login
+                }
+            }
 
-        //     if(!existingUser || !existingUser.emailVerified){
-        //         return false // if email is not verified, do not login
-        //     }
-        // }
+            // TODO: 2FA check
+
+            return true;
+        }
     },
     adapter: PrismaAdapter(db),
     session: { strategy: "jwt" },

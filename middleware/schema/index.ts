@@ -17,11 +17,12 @@ export const RegisterSchema = z
         email: z.string().email({
             message: "Email is required"
         }),
-        password: z.string().min(6, {
-            message: "Minimum 6 characters required",
-        }),
+        password: z.string()
+        .min(6, "Minimum 6 characters required")
+        .max(15, "Maximum 15 characters required"),
         cpassword: z.string()
     })
+    // fix this issue of them not syncing
     .refine((data) => data.password === data.cpassword, {
         message: "Passwords don't match",
         path: ["cpassword"],

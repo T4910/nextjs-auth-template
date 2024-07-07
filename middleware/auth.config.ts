@@ -1,7 +1,7 @@
 import bcyrpt from "bcryptjs"
 import Credentials from "next-auth/providers/credentials"
 import { LoginSchema } from "@/middleware/schema";
-import { getUserByEmail, getUserByName } from "@/lib/db";
+import { getUserByEmail, getUserByName } from "@/lib/user";
 
 export default {
     providers: [

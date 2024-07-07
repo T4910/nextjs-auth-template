@@ -17,7 +17,6 @@ export default function page() {
             every other route in the project is protected by default.</p>
         </div>
       </CardWrapper>
-
     </div>
   )
 }

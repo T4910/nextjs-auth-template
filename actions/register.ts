@@ -3,7 +3,10 @@ import * as z from "zod";
 import { RegisterSchema } from "@/middleware/schema";
 import { type formFlashProps } from "@/components/auth/formFlash"
 import bcrypt from "bcryptjs";
-import { db, getUserByEmail } from "@/lib/db";
+import { db } from "@/lib/db";
+import { getUserByEmail } from "@/lib/user";
+import { generateVerificationToken } from "@/lib/token";
+import { sendVerificationEmail, verifyEmail } from "@/lib/mail";
 
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
@@ -16,18 +19,19 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     
     const existingUser = await getUserByEmail(email);
 
-    if(existingUser) return { type: 'error', message: "User already exists"} as formFlashProps;
+    if(existingUser) return { type: 'error', message: "User already exists" } as formFlashProps;
 
-    await db.user.create({
+    const newUser = await db.user.create({
         data: {
             name: username,
             email,
             password: hashedPassword
         }
-    })
-
+    });
 
     // TODO: send a verification token email
+    const emailResponse = await verifyEmail(email, newUser?.name as string);
+    if(!!emailResponse.error || !emailResponse.res?.includes('OK')) return { type: 'error', message: "Server Error" } as formFlashProps;
 
-    return { type: 'success', message: "Valid fields"} as formFlashProps;
+    return { type: 'success', message: "Confirmation email sent" } as formFlashProps;
 }

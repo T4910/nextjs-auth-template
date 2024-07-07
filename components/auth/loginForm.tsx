@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/middleware/schema";
 import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
+import { getUrlErrorDisplayMessage } from "@/lib/utils";
 import Flash, { type formFlashProps } from "@/components/auth/formFlash"
 import {
   Form,
@@ -18,29 +19,13 @@ import {
   FormLabel,
   FormMessage
 } from "@/components/ui/form";
-import { url } from "inspector";
 
 
 export function LoginForm() {
   const searchParams = useSearchParams();
-  const urlError = searchParams.get('error');
-  let urlErrorDisplayMessage;
+  const urlError = searchParams.get('error'); // when NextAuth sends params to link for callbacks
+  const urlErrorDisplayMessage = getUrlErrorDisplayMessage(urlError);
   
-  // For nextauth errors
-  switch (urlError) {
-    case 'OAuthAccountNotLinked':
-      urlErrorDisplayMessage = "Email already in use with different provider";
-      break;
-    
-    case null:
-      urlErrorDisplayMessage = null;
-      break;
-
-    default:
-      urlErrorDisplayMessage = "Something went wrong!";
-      break;
-  }
-
   const [ flash, setFlash ] = useState<formFlashProps>({ message: urlErrorDisplayMessage || "" });
   const [isPending, startTransition] = useTransition();
 
@@ -53,7 +38,8 @@ export function LoginForm() {
   });
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    setFlash({message: ""});
+    setFlash({ message: "" });
+    // TODO: Remove url error when new submission made
 
     startTransition(() => {
       login(values)

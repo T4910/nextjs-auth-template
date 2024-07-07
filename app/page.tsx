@@ -1,7 +1,7 @@
+import React from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ShowLoginWrapper } from "@/components/auth/showLoginWrapper";
-import Link from "next/link";
-import React from "react";
 
 type RouteButtonProps = {
   children: React.ReactNode,
@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div className="grid place-items-center h-screen bg-radial-gradient">
       <div className="container mx-auto space-y-16">
-        <h1 className="md:text-6xl text-4xl text-white font-extrabold text-center">Nextjs authentication using NextAuth & Prisma</h1>
+        <h1 className="md:text-6xl text-4xl text-white font-extrabold text-center">Nextjs authentication using NextAuth & Prisma ORM</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           <RouteButton href="/">Home</RouteButton>
           <ShowLoginWrapper>
@@ -40,7 +40,7 @@ const RouteButton = ({children, href}: RouteButtonProps) => {
     <Link href={href}>
       <Button 
         variant="outline"
-        className="text-xl bg-white/80 border-4 w-full"
+        className="text-xl bg-white/80 border-2 w-full"
       >{children}</Button>
     </Link>
   );

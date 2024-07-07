@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Flash, { type formFlashProps } from "@/components/auth/formFlash"
 import { register } from "@/actions/register"
-import { login } from "@/actions/login"
 import {
   Form,
   FormControl,

@@ -9,7 +9,7 @@ export default async function page() {
         "use server"
 
         await signOut({
-          redirectTo: "/login"
+          redirectTo: "/"
         });
       }}>
         <button type="submit">Sign out</button>
