@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 export const generateVerificationToken = async (email: string) => {
     try {
         const token = uuid();
-        const expires = new Date(new Date().getTime() + 3600 * 5); // 5 minutes
+        const expires = new Date(new Date().getTime() + 3600 * 50); // 5 minutes
     
         const existingToken = await getVerificationTokenByEmail(email);
                 

@@ -9,6 +9,7 @@
 export const AUTH = [
     "/login",
     "/signup",
+    "/email-verification"
 ];
 
 

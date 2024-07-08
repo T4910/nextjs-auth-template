@@ -2,36 +2,36 @@
 import { 
   BeatLoader, SyncLoader, BarLoader,
   FadeLoader, PacmanLoader, PropagateLoader,
-  PuffLoader, PulseLoader, ScaleLoader, ClipLoader
+  PuffLoader, PulseLoader, ScaleLoader, ClipLoader,
 } from "react-spinners"
 
 type loadersTypes = {
   type?: 'Beat' | 'Sync' | 'Bar' | 'Fade' | 'Pacman' | 'Propagate' | 'Puff' | 'Pulse' | 'Scale' | 'Clip' 
 };
 
-export function Loaders({ type }: loadersTypes) {
+export function Loaders({ type, ...props }: loadersTypes) {
   switch (type) {
     case 'Beat':
-      return <BeatLoader />;
+      return <BeatLoader {...props}/>;
     case 'Sync':
-      return <SyncLoader />;
+      return <SyncLoader {...props}/>;
     case 'Bar':
-      return <BarLoader />;
+      return <BarLoader {...props}/>;
     case 'Fade':
-      return <FadeLoader />;
+      return <FadeLoader {...props}/>;
     case 'Pacman':
-      return <PacmanLoader />;
+      return <PacmanLoader {...props}/>;
     case 'Propagate':
-      return <PropagateLoader />;
+      return <PropagateLoader {...props}/>;
     case 'Puff':
-      return <PuffLoader />;
+      return <PuffLoader {...props}/>;
     case 'Scale':
-      return <ScaleLoader />;
+      return <ScaleLoader {...props}/>;
     case 'Clip':
-      return <ClipLoader />;
+      return <ClipLoader {...props}/>;
     case 'Pulse':
       
     default:
-      return <PulseLoader />;
+      return <PulseLoader {...props}/>;
   }
 }

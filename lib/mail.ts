@@ -40,17 +40,15 @@ export const sendVerificationEmail = async (username: string, email: string, tok
     const sent = await sendMail({
         recipient: email,
         subject: 'Welcome to NextAuth Authentication. Verify Your Email',
-        emailComponent: ConfirmEmail({url: `${process.env.WEBSITE_URL}/email-verification?code=${token}?email=${email}`})
+        emailComponent: ConfirmEmail({url: `${process.env.WEBSITE_URL}/email-verification?code=${token}`})
     });
 
-    console.log("Message435: ", sent, username, email, token, process.env.WEBSITE_URL)
     return sent;
 }
 
 export const verifyEmail = async (email: string, username: string) => {
     const token = await generateVerificationToken(email);
     const emailResponse  = await sendVerificationEmail(username, email, token?.token as string);
-    console.log("Message: ", token);
 
     return emailResponse;
 }
