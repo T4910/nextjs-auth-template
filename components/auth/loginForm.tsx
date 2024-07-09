@@ -1,4 +1,5 @@
 "use client"
+import Link from "next/link";
 import { z } from "zod";
 import { login } from "@/actions/login"
 import { Input } from "@/components/ui/input"
@@ -43,7 +44,7 @@ export function LoginForm() {
 
     startTransition(() => {
       login(values)
-        .then(data => setFlash(data));
+        .then(data => setFlash(data as formFlashProps));
         // TODO: Add 2FA
     });
   }
@@ -94,6 +95,14 @@ export function LoginForm() {
                         type="password"
                       />
                     </FormControl>
+                    <Button
+                      asChild
+                      size="sm"
+                      variant="link"
+                      className="px-0 font-normal"
+                    >
+                      <Link href="/reset-password">Forgot password?</Link>
+                    </Button>        
                     <FormMessage />
                   </FormItem>
                 )}

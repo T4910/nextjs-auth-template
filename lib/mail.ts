@@ -2,7 +2,7 @@ import { render } from '@react-email/components';
 import { ReactElement } from "react";
 import { ConfirmEmail } from '@/app/_components/emailTemplates/confirmEmail';
 import { createTransport } from "nodemailer";
-import { generateVerificationToken } from '@/lib/token';
+import { generateVerificationToken, generatePasswordResetToken } from '@/lib/tokens';
 
 type sendMailProps = {
     recipient: string,
@@ -46,9 +46,26 @@ export const sendVerificationEmail = async (username: string, email: string, tok
     return sent;
 }
 
+export const sendPasswordResetEmail = async (username: string, email: string, token: string) => {
+    const sent = await sendMail({
+        recipient: email,
+        subject: 'Welcome to NextAuth Authentication. Verify Your Email',
+        emailComponent: ConfirmEmail({url: `${process.env.WEBSITE_URL}/change-password?code=${token}`})
+    });
+
+    return sent;
+}
+
 export const verifyEmail = async (email: string, username: string) => {
     const token = await generateVerificationToken(email);
     const emailResponse  = await sendVerificationEmail(username, email, token?.token as string);
+
+    return emailResponse;
+}
+
+export const initPassReset = async (email: string, username: string) => {
+    const token = await generatePasswordResetToken(email);
+    const emailResponse = await sendPasswordResetEmail(username, email, token?.token as string);
 
     return emailResponse;
 }

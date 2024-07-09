@@ -16,6 +16,9 @@ export function EmailVerification() {
 
   const verify = useCallback(() => newVerification(token), []);
   useEffect(() => {
+    if(!token) return setResult({ type: "error", message: "Missing Token" }); 
+    if(result.message) return;
+
     verify()
     .then(async result => {
       console.log(result);

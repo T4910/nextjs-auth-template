@@ -5,7 +5,7 @@ import { type formFlashProps } from "@/components/auth/formFlash"
 import { signIn } from "@/middleware/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/middleware/route";
 import { AuthError } from "next-auth";
-import { getUserByEmail } from "@/lib/user";
+import { getUserByEmail } from "@/data/user";
 import { verifyEmail } from "@/lib/mail";
 import bcrypt from "bcryptjs";
 

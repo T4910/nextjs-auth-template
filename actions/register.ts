@@ -4,9 +4,8 @@ import { RegisterSchema } from "@/middleware/schema";
 import { type formFlashProps } from "@/components/auth/formFlash"
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
-import { getUserByEmail } from "@/lib/user";
-import { generateVerificationToken } from "@/lib/token";
-import { sendVerificationEmail, verifyEmail } from "@/lib/mail";
+import { getUserByEmail } from "@/data/user";
+import { verifyEmail } from "@/lib/mail";
 
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
@@ -30,7 +29,6 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         }
    });
 
-    // TODO: send a verification token email
     const emailResponse = await verifyEmail(email, newUser?.name as string);
     if(emailResponse.error || !emailResponse.res?.includes('OK')) return { type: 'error', message: "Server Error" } as formFlashProps;
 

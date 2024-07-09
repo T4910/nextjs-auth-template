@@ -1,7 +1,7 @@
 import NextAuth, { type DefaultSession } from "next-auth";
 import authConfig from "@/middleware/auth.config";
 import { db } from "@/lib/db"
-import { getUserById } from "@/lib/user";
+import { getUserById } from "@/data/user";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Roles } from "@prisma/client";
 import credentials from "next-auth/providers/credentials";
