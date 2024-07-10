@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { TwoFactorForm } from "@/components/auth/twoFactorForm";
 
-type loginActionReturn = formFlashProps & { showOtp?: boolean | undefined } | { type: string; message: string; showOtp?: undefined; };
+type loginActionReturn = formFlashProps & { showOtp?: boolean | undefined } | { type: string; message: string; showOtp?: undefined; } | undefined;
 
 export function LoginForm() {
   const router = useRouter();

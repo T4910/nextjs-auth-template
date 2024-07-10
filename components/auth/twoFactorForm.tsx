@@ -21,7 +21,12 @@ export function TwoFactorForm({ form }: { form: UseFormReturn<z.infer<typeof Log
             <FormItem>
                 <FormLabel>One-Time Password</FormLabel>
                 <FormControl>
-                    <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS} {...field}>
+                    <InputOTP 
+                        maxLength={6} 
+                        pattern={REGEXP_ONLY_DIGITS} 
+                        className="justify-center"
+                        {...field}
+                    >
                         <InputOTPGroup>
                             <InputOTPSlot index={0} />
                             <InputOTPSlot index={1} />

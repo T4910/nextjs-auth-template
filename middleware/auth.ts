@@ -6,13 +6,19 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Roles } from "@prisma/client";
 import { get2FConfirmatonByUserId } from "@/data/tokens";
 
+
 export type ExtendedUser = DefaultSession["user"] & {
-    role: Roles
+    role: Roles,
+    is2FEnabled: boolean
 };
+
+export type EdittedUserSessionDetails = Omit<ExtendedUser, "password" | "createdAt" | "updatedAt" > & {
+    emailVerified: Date
+}
 
 declare module "next-auth" {
     interface Session {
-        user: ExtendedUser
+        user: EdittedUserSessionDetails
     }
 }
 
@@ -37,19 +43,20 @@ export const {
             if(!token?.sub) return token;
 
             const user = await getUserById(token?.sub as string);
-
-            if(!user) return token;
-            token.role = user?.role;
+            const { password, createdAt, updatedAt, ...editedUserDetails } = user || {};
+ 
+            token.details = editedUserDetails;
 
             return token;
         },
         async session ({ session, token }){
-            if(token.sub && token.role && session.user){
-                session.user.id = token?.sub as string;
-                session.user.role = token.role as Roles;
+            if(token.sub && token.details && session.user){
+                console.log(token, session, 2332)
+                // session.user.
+                session.user = token.details as EdittedUserSessionDetails;
             }
 
-            console.log(session);
+            console.log(session, 666);
             return session;
         },
         async signIn({ user, account }){

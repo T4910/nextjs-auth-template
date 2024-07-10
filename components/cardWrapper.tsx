@@ -26,9 +26,9 @@ export function CardWrapper({
 }: CardWrapperProps) {
   return (
     <Card className="container max-w-96 shadow-md px-2">
-        <CardHeader>
+        {!!headerLabel ? <CardHeader>
             <Header label={headerLabel} />
-        </CardHeader>
+        </CardHeader> : null}
         <CardContent>
             {children}
         </CardContent>
