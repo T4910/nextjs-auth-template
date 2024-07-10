@@ -4,7 +4,7 @@ import { db } from "@/lib/db"
 import { getUserById } from "@/data/user";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Roles } from "@prisma/client";
-import credentials from "next-auth/providers/credentials";
+import { get2FConfirmatonByUserId } from "@/data/tokens";
 
 export type ExtendedUser = DefaultSession["user"] & {
     role: Roles
@@ -53,15 +53,23 @@ export const {
             return session;
         },
         async signIn({ user, account }){
-            if(account?.provider == 'credentials'){
+            if(account?.provider === 'credentials'){
                 const existingUser = await getUserById(user?.id as string);
     
-                if(!existingUser || !existingUser.emailVerified){
-                    return false // if email is not verified, do not login
+                // if email is not verified, do not login
+                if(!existingUser || !existingUser.emailVerified) return false 
+
+                if(existingUser.is2fEnabled){
+                    const confirmedOtp = await get2FConfirmatonByUserId(existingUser.id);
+            
+                    // if user hasn't confirmed otp
+                    if(!(!!confirmedOtp)) return false;
+
+                    await db.twoFactorConfirmation.delete({
+                        where: { userId: existingUser?.id }
+                    });
                 }
             }
-
-            // TODO: 2FA check
 
             return true;
         }

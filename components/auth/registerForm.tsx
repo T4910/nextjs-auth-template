@@ -41,6 +41,8 @@ export function RegisterForm() {
       register(values)
         .then(data => setFlash(data));
     })
+
+    form.reset();
   }
 
   return (

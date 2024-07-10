@@ -1,8 +1,13 @@
 import { render } from '@react-email/components';
 import { ReactElement } from "react";
 import { ConfirmEmail } from '@/app/_components/emailTemplates/confirmEmail';
+import { TwoFactorEmail } from '@/app/_components/emailTemplates/twoFactorEmail';
 import { createTransport } from "nodemailer";
-import { generateVerificationToken, generatePasswordResetToken } from '@/lib/tokens';
+import { 
+    generateVerificationToken, 
+    generatePasswordResetToken,
+    generate2FToken
+} from '@/lib/tokens';
 
 type sendMailProps = {
     recipient: string,
@@ -30,13 +35,15 @@ export const sendMail = async ({
             html: render(emailComponent)
         });
         
-        return {res: info.response};
+        return { res: info.response };
     } catch (error) {
         return { error };
     }
 }
 
-export const sendVerificationEmail = async (username: string, email: string, token: string) => {
+export const sendVerificationEmail = async (username: string, email: string, token: string | undefined) => {
+    if(!token) return { error: "Missing token " };
+
     const sent = await sendMail({
         recipient: email,
         subject: 'Welcome to NextAuth Authentication. Verify Your Email',
@@ -46,7 +53,9 @@ export const sendVerificationEmail = async (username: string, email: string, tok
     return sent;
 }
 
-export const sendPasswordResetEmail = async (username: string, email: string, token: string) => {
+export const sendPasswordResetEmail = async (username: string, email: string, token: string | undefined) => {
+    if(!token) return { error: "Missing token " };
+
     const sent = await sendMail({
         recipient: email,
         subject: 'Welcome to NextAuth Authentication. Verify Your Email',
@@ -56,16 +65,35 @@ export const sendPasswordResetEmail = async (username: string, email: string, to
     return sent;
 }
 
+export const send2FEmail = async (username: string, email: string, token: string | undefined) => {
+    if(!token) return { error: "Missing token " };
+
+    const sent = await sendMail({
+        recipient: email,
+        subject: 'Welcome to NextAuth Authentication. Verify Your Email',
+        emailComponent: TwoFactorEmail({ code: token })
+    });
+
+    return sent;
+}
+
 export const verifyEmail = async (email: string, username: string) => {
     const token = await generateVerificationToken(email);
-    const emailResponse  = await sendVerificationEmail(username, email, token?.token as string);
+    const emailResponse  = await sendVerificationEmail(username, email, token?.token);
 
     return emailResponse;
 }
 
 export const initPassReset = async (email: string, username: string) => {
     const token = await generatePasswordResetToken(email);
-    const emailResponse = await sendPasswordResetEmail(username, email, token?.token as string);
+    const emailResponse = await sendPasswordResetEmail(username, email, token?.token);
+
+    return emailResponse;
+}
+
+export const init2FAuth = async (email: string, username: string) => {
+    const token = await generate2FToken(email);
+    const emailResponse = await send2FEmail(username, email, token?.token);
 
     return emailResponse;
 }

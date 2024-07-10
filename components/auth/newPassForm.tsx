@@ -44,6 +44,8 @@ export function NewPassForm() {
                     if(data.type === "success") return router.push("/login");
                 });
         })
+
+        form.reset();
     }
 
     return (

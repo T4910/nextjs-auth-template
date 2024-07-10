@@ -37,12 +37,12 @@ export function CardWrapper({
                 <OtherAuth />
             </CardFooter>
         )}
-        <CardFooter>
+        {(!!backBtnLabel || !!backBtnHref) ? <CardFooter>
             <LinkButton 
                 label={backBtnLabel}
                 href={backBtnHref}
             />
-        </CardFooter>
+        </CardFooter> : null}
     </Card> 
   )
 }

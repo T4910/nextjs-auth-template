@@ -7,7 +7,7 @@ type linkButtonProps = {
 }
 
 export function LinkButton({ href, label }: linkButtonProps) {
-  return (
+ return (
     <Button
         variant="link"
         className="font-normal w-full underline"

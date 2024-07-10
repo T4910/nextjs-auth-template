@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import otpGenerator from 'otp-generator';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -17,4 +18,8 @@ export function getUrlErrorDisplayMessage(error: string | null){
       default:
         return "Something went wrong!";
     }
+}
+
+export function generateOTP(){ 
+  return otpGenerator.generate(6, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false}) 
 }

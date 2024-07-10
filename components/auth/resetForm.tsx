@@ -27,12 +27,13 @@ export function ResetForm() {
   const onSubmit = (values: z.infer<typeof RequestResetSchema>) => {
     setFlash({ message: "" });
     
-    console.log(values);
     startTransition(() => {
       requestResetPassword(values)
         .then(data => setFlash(data as formFlashProps));
         // TODO: Add 2FA
     });
+
+    form.reset();
   }
 
   return (
