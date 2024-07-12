@@ -7,7 +7,6 @@ import {
     AUTHAPI
 } from "./middleware/route";
 
-
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
@@ -18,21 +17,21 @@ export default auth((req) => {
     const isPublicroute = PUBLIC.includes(nextUrl.pathname);
     const isAuthRoute = AUTH.includes(nextUrl.pathname);
 
-    if(isApiAuthRoute) return null;
+    if(isApiAuthRoute) return;
     
     if(isAuthRoute){
         if(isLoggedIn){
             return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
         }
 
-        return null; 
+        return; 
     }
 
     if(!isLoggedIn && !isPublicroute){
         return Response.redirect(new URL("/login", nextUrl));
     }
 
-    return null;
+    return;
 })
 
 export const config = {

@@ -50,7 +50,7 @@ export const {
             return token;
         },
         async session ({ session, token }){
-            if(token?.details && session?.user?.id){
+            if(token?.details?.id){
                 session.user = token?.details;
             }
 
