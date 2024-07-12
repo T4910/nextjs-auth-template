@@ -1,7 +1,9 @@
 import { z } from 'zod';
+import { Roles } from "@prisma/client";
+
 
 export const LoginSchema = z.object({
-    email: z.string({
+    email: z.string().min(1, {
         message: "Username or Email is required"
     }),
     password: z.string().min(1, {
@@ -16,7 +18,7 @@ export const LoginSchema = z.object({
 
 
 export const RegisterSchema = z.object({
-    username: z.string({
+    username: z.string().min(1, {
         message: "Username is required"
     }),
     email: z.string().email({
@@ -60,3 +62,15 @@ export const PasswordResetSchema = z.object({
     message: "Passwords don't match",
     path: ["password"],
 });
+
+export const EditUserDetailsSchema = z.object({
+    name: z.string().min(1, {
+        message: "Username is required"
+    }),
+    email: z.string().email({
+        message: "Email is required"
+    }),
+    // role: z.enum([Roles.ADMIN, Roles.USER]),
+    is2fEnabled: z.boolean()
+
+})

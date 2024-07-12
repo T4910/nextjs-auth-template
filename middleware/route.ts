@@ -9,7 +9,6 @@
 export const AUTH = [
     "/login",
     "/signup",
-    "/email-verification",
     "/reset-password",
     "/change-password"
 ];
@@ -21,6 +20,7 @@ export const AUTH = [
  * @type {string[]}
  */
 export const PUBLIC = [
+    "/email-verification",
     "/",
     "/about"
 ]

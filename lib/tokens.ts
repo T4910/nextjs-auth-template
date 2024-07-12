@@ -11,7 +11,7 @@ import {
 export const generateVerificationToken = async (email: string) => {
     try {
         const token = uuid();
-        const expires = new Date(new Date().getTime() + 1000*60*( 5 )); // 5 minutes
+        const expires = new Date(new Date().getTime() + 1000*60*( 30 )); // 5 minutes
     
         const existingToken = await getVerificationTokenByEmail(email);
                 

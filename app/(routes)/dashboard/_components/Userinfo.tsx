@@ -51,9 +51,9 @@ export function UserInfo({ user }: UserInfoProps) {
               <div className="flex flex-row items-center justify-between rounded-lg border p-2 shadow-sm min-w-full space-x-6">
                   <p className="text-sm font-medium">Two Factor Authentication</p>
                   <Badge
-                    variant={user?.is2FEnabled ? "success" : "destructive"}
+                    variant={user?.is2fEnabled ? "success" : "destructive"}
                   >
-                    {user?.is2FEnabled ? "ON" : "OFF"}
+                    {user?.is2fEnabled ? "ON" : "OFF"}
                   </Badge>
               </div>
             </CardContent>

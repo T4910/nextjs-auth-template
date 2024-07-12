@@ -1,24 +1,22 @@
-import NextAuth, { type DefaultSession } from "next-auth";
+import NextAuth from "next-auth";
 import authConfig from "@/middleware/auth.config";
 import { db } from "@/lib/db"
 import { getUserById } from "@/data/user";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { Roles } from "@prisma/client";
+import { type User } from "@prisma/client";
 import { get2FConfirmatonByUserId } from "@/data/tokens";
 
-
-export type ExtendedUser = DefaultSession["user"] & {
-    role: Roles,
-    is2FEnabled: boolean
-};
-
-export type EdittedUserSessionDetails = Omit<ExtendedUser, "password" | "createdAt" | "updatedAt" > & {
-    emailVerified: Date
-}
+export type EdittedUserSessionDetails = Omit<User, "password" | "createdAt" | "updatedAt" >
 
 declare module "next-auth" {
     interface Session {
         user: EdittedUserSessionDetails
+    }
+}
+
+declare module "@auth/core/jwt" {
+    interface JWT {
+        details: EdittedUserSessionDetails
     }
 }
 
@@ -43,20 +41,19 @@ export const {
             if(!token?.sub) return token;
 
             const user = await getUserById(token?.sub as string);
-            const { password, createdAt, updatedAt, ...editedUserDetails } = user || {};
+            if(!user) return token;
+
+            const { password, createdAt, updatedAt, ...editedUserDetails } = user;
  
             token.details = editedUserDetails;
 
             return token;
         },
         async session ({ session, token }){
-            if(token.sub && token.details && session.user){
-                console.log(token, session, 2332)
-                // session.user.
-                session.user = token.details as EdittedUserSessionDetails;
+            if(token?.details && session?.user?.id){
+                session.user = token?.details;
             }
 
-            console.log(session, 666);
             return session;
         },
         async signIn({ user, account }){

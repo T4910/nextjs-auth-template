@@ -8,8 +8,8 @@ export default async function page() {
 
   return (
     <div className="grid place-items-center min-h-screen bg-radial-gradient">
-      <div className="space-y-6">
-        <Navbar name={user?.name || ""}/>
+      <div className="space-y-2">
+        <Navbar user={user}/>
         {user && <UserInfo user={user} />}
       </div>
     </div>

@@ -30,14 +30,19 @@ export const requestResetPassword = async (values: z.infer<typeof RequestResetSc
     return { type: "success", message: "Reset Email Sent!" } as formFlashProps;
 }
 
-export const changePassword = async (values: z.infer<typeof PasswordResetSchema>, token: string) => {
-    const existingToken = await getPasswordResetTokenByToken(token);
-    if(!existingToken) return { type: "error", message: "Invalid Token" } as formFlashProps;
-    
-    const hasExpired = new Date() > new Date(existingToken?.expires);
-    if(hasExpired) return { type: "error", message: "Expired Token" } as formFlashProps;
+// if token is false, ignore the token
+export const changePassword = async (values: z.infer<typeof PasswordResetSchema>, token: string | false, email?: string) => {
+    let existingToken, hasExpired;
 
-    const existingUser = await getUserByEmail(existingToken?.email);
+    if(!!token){
+        existingToken = await getPasswordResetTokenByToken(token);
+        if(!existingToken) return { type: "error", message: "Invalid Token" } as formFlashProps;
+        
+        hasExpired = new Date() > new Date(existingToken?.expires);
+        if(hasExpired) return { type: "error", message: "Expired Token" } as formFlashProps;
+    }
+
+    const existingUser = await getUserByEmail((!!token) ? existingToken?.email as string : email as string);
     if(!existingUser) return { type: "error", message: "User not found" } as formFlashProps;
 
     if(!existingUser?.emailVerified){
@@ -58,7 +63,7 @@ export const changePassword = async (values: z.infer<typeof PasswordResetSchema>
         data: { password: hashedPassword }
     });
 
-    await db.passwordResetToken.delete({ where: { id: existingToken.id } });
+    if(!!token) await db.passwordResetToken.delete({ where: { id: existingToken?.id } });
 
     return { type: "success", message: "Successfully reset password!" } as formFlashProps;
 }

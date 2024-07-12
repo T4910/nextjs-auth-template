@@ -6,10 +6,15 @@ import { getVerificationTokenByToken } from "@/data/tokens"
 import { AuthError } from "next-auth";
 import { signIn } from "@/middleware/auth"
 import { DEFAULT_LOGIN_REDIRECT } from "@/middleware/route"
+import { getCurrentUser } from "@/lib/auth"
+import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 
 type newVerificationReturn = ((token: string) => formFlashProps) | Promise<formFlashProps>;
 
-export const newVerification = async (token: string) => {    
+export const newVerification = async (token: string) => {   
+    const loggedInUser = await getCurrentUser();
+
     const existingToken = await getVerificationTokenByToken(token);
     if(!existingToken) return { type: "error", message: "Invalid Token" } as formFlashProps;
 
@@ -17,12 +22,13 @@ export const newVerification = async (token: string) => {
     if(hasExpired) return { type: "error", message: "Expired Token" } as formFlashProps;
 
     const user = await getUserByEmail(existingToken?.email);
-    if(!user) return { type: "error", message: "User not found" } as formFlashProps;
+    // if token can't produce a user AND user is not logged in
+    if(!(!!user) && !(!!loggedInUser?.id)) return { type: "error", message: "User not found" } as formFlashProps;
 
     await db.user.update({
-        where: { id: user.id },
+        where: { id: user?.id || loggedInUser?.id },
         data: { 
-            email: existingToken.email,
+            email: existingToken.email, // verification both when login in & changing email
             emailVerified: new Date() 
         }
     });
@@ -30,9 +36,9 @@ export const newVerification = async (token: string) => {
     await db.verificationToken.delete({ where: { id: existingToken.id } });
 
     try {
-        await signIn("credentials", { 
-            email: user.email,  
-            password: user.password,
+        loggedInUser ? redirect("/dashboard") : await signIn("credentials", { 
+            email: user?.email,  
+            password: user?.password,
             directAccess: true,
             redirectTo: DEFAULT_LOGIN_REDIRECT 
         });

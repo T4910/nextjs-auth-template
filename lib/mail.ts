@@ -41,7 +41,7 @@ export const sendMail = async ({
     }
 }
 
-export const sendVerificationEmail = async (username: string, email: string, token: string | undefined) => {
+export const sendVerificationEmail = async (email: string, token: string | undefined, username?: string,) => {
     if(!token) return { error: "Missing token " };
 
     const sent = await sendMail({
@@ -53,7 +53,7 @@ export const sendVerificationEmail = async (username: string, email: string, tok
     return sent;
 }
 
-export const sendPasswordResetEmail = async (username: string, email: string, token: string | undefined) => {
+export const sendPasswordResetEmail = async (email: string, token: string | undefined, username?: string,) => {
     if(!token) return { error: "Missing token " };
 
     const sent = await sendMail({
@@ -65,7 +65,7 @@ export const sendPasswordResetEmail = async (username: string, email: string, to
     return sent;
 }
 
-export const send2FEmail = async (username: string, email: string, token: string | undefined) => {
+export const send2FEmail = async (email: string, token: string | undefined, username?: string,) => {
     if(!token) return { error: "Missing token " };
 
     const sent = await sendMail({
@@ -77,23 +77,30 @@ export const send2FEmail = async (username: string, email: string, token: string
     return sent;
 }
 
-export const verifyEmail = async (email: string, username: string) => {
+export const verifyEmail = async (email: string, username?: string) => {
     const token = await generateVerificationToken(email);
-    const emailResponse  = await sendVerificationEmail(username, email, token?.token);
+    const emailResponse  = await sendVerificationEmail(email, token?.token, username);
 
     return emailResponse;
 }
 
-export const initPassReset = async (email: string, username: string) => {
+// export const changeEmail = async (currentEmail: string, newEmail: string, username?: string) => {
+//     const token = await generateVerificationToken(currentEmail);
+//     const emailResponse  = await sendVerificationEmail(newEmail, token?.token, username);
+
+//     return emailResponse;
+// }
+
+export const initPassReset = async (email: string, username?: string) => {
     const token = await generatePasswordResetToken(email);
-    const emailResponse = await sendPasswordResetEmail(username, email, token?.token);
+    const emailResponse = await sendPasswordResetEmail(email, token?.token, username);
 
     return emailResponse;
 }
 
-export const init2FAuth = async (email: string, username: string) => {
+export const init2FAuth = async (email: string, username?: string) => {
     const token = await generate2FToken(email);
-    const emailResponse = await send2FEmail(username, email, token?.token);
+    const emailResponse = await send2FEmail(email, token?.token, username);
 
     return emailResponse;
 }
