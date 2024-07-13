@@ -6,7 +6,7 @@
  * These routes will redirect logged in users to /dashboard
  * @type {string[]}
  */
-export const AUTH = [
+export const AUTH: string[] = [
     "/login",
     "/signup",
     "/reset-password",
@@ -19,7 +19,7 @@ export const AUTH = [
  * These routes do not require authentication
  * @type {string[]}
  */
-export const PUBLIC = [
+export const PUBLIC: string[] = [
     "/email-verification",
     "/",
     "/about"
@@ -30,7 +30,7 @@ export const PUBLIC = [
  * The default redirect path after logging in
  * @type {string}
  */
-export const DEFAULT_LOGIN_REDIRECT = "/dashboard";
+export const DEFAULT_LOGIN_REDIRECT: string = "/dashboard";
 
 
 /**
@@ -38,4 +38,12 @@ export const DEFAULT_LOGIN_REDIRECT = "/dashboard";
  * Routes that start with this prefix arae used for API authentication purposes
  * @type {string}
  */
-export const AUTHAPI = "/api/auth";
+export const AUTHAPI: string = "/api/auth";
+
+
+/**
+ * The prefix for ADMIN routes
+ * Routes that start with this prefix are used for admin  purposes
+ * @type {string}
+ */
+export const ADMIN: string = "/admin";
