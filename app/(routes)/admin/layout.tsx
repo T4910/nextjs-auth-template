@@ -7,9 +7,9 @@ export default function Adminlayout({
     children: ReactNode
 }) {
   return (
-    <div className="min-h-screen bg-radial-gradient py-4 flex">
+    <div className="min-h-screen bg-radial-gradient py-4 flex gap-x-8">
         <SideNavbar />
-        <div>{children}</div>
+        <div className="flex-grow">{children}</div>
     </div>
   )
 }

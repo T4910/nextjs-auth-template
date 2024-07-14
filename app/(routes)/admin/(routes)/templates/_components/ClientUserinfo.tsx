@@ -1,42 +1,28 @@
-import { LogoutWrapper } from "@/components/auth/logOutWrapper"
-import { Button } from "@/components/ui/button"
+"use client"
 import { 
-    Card,
-    CardHeader,
+    Card, CardHeader,
     CardContent,
-    CardFooter
 } from "@/components/ui/card"
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-  } from "@/components/ui/avatar"
-import { type EdittedUserSessionDetails } from "@/middleware/auth";
-import { FaUser } from "react-icons/fa"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils";
- 
-export type UserInfoProps = {
-    user: EdittedUserSessionDetails
-}
+import { useCurrentUser } from "@/hooks/sessions"
+import { AdminApiRoute } from "@/app/(routes)/admin/(routes)/templates/_components/ApiRoute"
 
-export function UserInfo({ user }: UserInfoProps) {
-  const details = { 
-    id: user?.id,
-    name: user?.name,
-    email: user?.email,
-    role: user?.role,
-  }
+
+export function ClientUserInfo() {
+    const user = useCurrentUser();
+
+    const details = { 
+      id: user?.id,
+      name: user?.name,
+      email: user?.email,
+      role: user?.role,
+    };
+
     return (
         <Card className="container shadow-md px-0 max-w-fit">
             <CardHeader className="items-center">
-                <Avatar className="size-32">
-                  
-                    <AvatarImage src={user?.image ?? ''} alt={user?.name ?? ""} />
-                    <AvatarFallback>
-                      <FaUser className="size-12" />
-                    </AvatarFallback>
-                </Avatar>
+                <h3 className="font-semibold">Client Component</h3>
             </CardHeader>
             <CardContent className="flex flex-col justify-between items-center space-y-4 px-4 py-2">
               {Object.entries(details).map(([key, value]) => (
@@ -56,6 +42,7 @@ export function UserInfo({ user }: UserInfoProps) {
                     {user?.is2fEnabled ? "ON" : "OFF"}
                   </Badge>
               </div>
+              <AdminApiRoute />
             </CardContent>
         </Card>
     )
