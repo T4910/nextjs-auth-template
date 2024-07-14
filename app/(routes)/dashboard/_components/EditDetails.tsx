@@ -22,7 +22,7 @@ import {
     FormItem, FormLabel, FormMessage,
     FormDescription
 } from "@/components/ui/form";
-import { useCurrentUser } from "@/hooks/currentUser"
+import { useCurrentUser } from "@/hooks/sessions"
 import {
     Select,
     SelectContent,

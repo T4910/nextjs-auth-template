@@ -63,7 +63,7 @@ model Session {
   updatedAt DateTime @updatedAt
 }
 
-model VerificationToken {
+model EmailVerificationToken {
   id      String   @id @default(cuid())
   email   String
   token   String   @unique
@@ -97,7 +97,7 @@ model TwoFactorConfirmation {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model EmailVerificationToken {
+model PasswordlessToken { // Like a magic link
   identifier String
   token      String
   expires    DateTime

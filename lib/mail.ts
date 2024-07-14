@@ -4,7 +4,7 @@ import { ConfirmEmail } from '@/app/_components/emailTemplates/confirmEmail';
 import { TwoFactorEmail } from '@/app/_components/emailTemplates/twoFactorEmail';
 import { createTransport } from "nodemailer";
 import { 
-    generateVerificationToken, 
+    generateEmailVerificationToken, 
     generatePasswordResetToken,
     generate2FToken
 } from '@/lib/tokens';
@@ -78,14 +78,14 @@ export const send2FEmail = async (email: string, token: string | undefined, user
 }
 
 export const verifyEmail = async (email: string, username?: string) => {
-    const token = await generateVerificationToken(email);
+    const token = await generateEmailVerificationToken(email);
     const emailResponse  = await sendVerificationEmail(email, token?.token, username);
 
     return emailResponse;
 }
 
 // export const changeEmail = async (currentEmail: string, newEmail: string, username?: string) => {
-//     const token = await generateVerificationToken(currentEmail);
+//     const token = await generateEmailVerificationToken(currentEmail);
 //     const emailResponse  = await sendVerificationEmail(newEmail, token?.token, username);
 
 //     return emailResponse;

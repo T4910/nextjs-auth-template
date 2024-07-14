@@ -3,25 +3,25 @@ import { v4 as uuid } from "uuid";
 import { generateOTP } from "@/lib/utils";
 import { getUserByEmail } from "@/data/user";
 import { 
-    getVerificationTokenByEmail, 
+    getEmailVerificationTokenByEmail, 
     getPasswordResetTokenByEmail, 
     get2FTokenByEmail 
 } from "@/data/tokens";
 
-export const generateVerificationToken = async (email: string) => {
+export const generateEmailVerificationToken = async (email: string) => {
     try {
         const token = uuid();
         const expires = new Date(new Date().getTime() + 1000*60*( 30 )); // 5 minutes
     
-        const existingToken = await getVerificationTokenByEmail(email);
+        const existingToken = await getEmailVerificationTokenByEmail(email);
                 
-        const verificationToken = await db.verificationToken.upsert({
+        const emailVerificationToken = await db.emailVerificationToken.upsert({
             where: { token: existingToken?.token ?? '' },
             update: { token, expires },
             create: { email, token, expires }
         });
     
-        return verificationToken;
+        return emailVerificationToken;
     } catch (error) {
         return null;
     }

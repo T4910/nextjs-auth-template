@@ -6,6 +6,6 @@ export default function Authlayout({
     children: React.ReactNode
 }) {
   return (
-    <div className="grid place-items-center min-h-screen bg-radial-gradient">{children}</div>
+    <div className="grid place-items-center p-4 min-h-screen bg-radial-gradient">{children}</div>
   )
 }

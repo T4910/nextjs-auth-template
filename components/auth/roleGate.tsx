@@ -1,5 +1,4 @@
-"use client"
-
+"use client" // making it client so the it can workon bot client and server codes
 import { useCurrentRole } from "@/hooks/sessions"
 import { Roles } from "@prisma/client"
 import { ReactNode } from "react"
@@ -7,18 +6,25 @@ import Flash from "@/components/auth/formFlash"
 
 type RoleGateProps = {
     children: ReactNode,
-    allowedRole: Roles
+    allowedRole: Roles,
+    showError?: boolean
 } 
 
-export function RoleGate({ children, allowedRole }: RoleGateProps) {
+// fix client error - slow down
+
+export function RoleGate({ children, allowedRole, showError = false }: RoleGateProps) {
     const role = useCurrentRole();
 
-    if(role !== allowedRole) return (
-        <Flash 
-            type="error"
-            message="You are not allowed to view this"
-        />
-    );
+    if(role !== allowedRole){ 
+        if(!showError) return null;
+
+        return (
+            <Flash 
+                type="error"
+                message="You are not allowed to view this"
+            />
+        );
+    }
 
     return (
         <>

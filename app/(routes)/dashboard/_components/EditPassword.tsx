@@ -21,7 +21,7 @@ import {
     Form, FormControl, FormField,
     FormItem, FormLabel, FormMessage
 } from "@/components/ui/form";  
-import { useCurrentUser } from "@/hooks/currentUser"
+import { useCurrentUser } from "@/hooks/sessions"
 
 export function EditPasswordTrigger({ children }: { children: ReactNode }) {
     const user = useCurrentUser();

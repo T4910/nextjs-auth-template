@@ -11,13 +11,13 @@ import {
     AvatarFallback,
     AvatarImage,
   } from "@/components/ui/avatar"
-import { type ExtendedUser } from "@/middleware/auth";
+import { type EdittedUserSessionDetails } from "@/middleware/auth";
 import { FaUser } from "react-icons/fa"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils";
  
 type UserInfoProps = {
-    user: ExtendedUser
+    user: EdittedUserSessionDetails
 }
 
 export function UserInfo({ user }: UserInfoProps) {

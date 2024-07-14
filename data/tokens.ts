@@ -1,18 +1,18 @@
 import { db } from "@/lib/db";
 
-export const getVerificationTokenByEmail = async (email: string) => {
+export const getEmailVerificationTokenByEmail = async (email: string) => {
     try {
-        const verificationToken = await db.verificationToken.findFirst({ where: { email } });
-        return verificationToken;
+        const emailVerificationToken = await db.emailVerificationToken.findFirst({ where: { email } });
+        return emailVerificationToken;
     } catch (error) {
         return null;
     }
 };
 
-export const getVerificationTokenByToken = async (token: string) => {
+export const getEmailVerificationTokenByToken = async (token: string) => {
     try {
-        const verificationToken = await db.verificationToken.findUnique({ where: { token } });
-        return verificationToken;
+        const emailVerificationToken = await db.emailVerificationToken.findUnique({ where: { token } });
+        return emailVerificationToken;
     } catch (error) {
         return null;
     }
@@ -20,8 +20,8 @@ export const getVerificationTokenByToken = async (token: string) => {
 
 export const getPasswordResetTokenByEmail = async (email: string) => {
     try {
-        const verificationToken = await db.passwordResetToken.findFirst({ where: { email } });
-        return verificationToken;
+        const emailVerificationToken = await db.passwordResetToken.findFirst({ where: { email } });
+        return emailVerificationToken;
     } catch (error) {
         return null;
     }
@@ -29,8 +29,8 @@ export const getPasswordResetTokenByEmail = async (email: string) => {
 
 export const getPasswordResetTokenByToken = async (token: string) => {
     try {
-        const verificationToken = await db.passwordResetToken.findUnique({ where: { token } });
-        return verificationToken;
+        const emailVerificationToken = await db.passwordResetToken.findUnique({ where: { token } });
+        return emailVerificationToken;
     } catch (error) {
         return null;
     }

@@ -2,7 +2,7 @@
 import { db } from "@/lib/db"
 import { getUserByEmail } from "@/data/user"
 import { formFlashProps } from "@/components/auth/formFlash"
-import { getVerificationTokenByToken } from "@/data/tokens"
+import { getEmailVerificationTokenByToken } from "@/data/tokens"
 import { AuthError } from "next-auth";
 import { signIn } from "@/middleware/auth"
 import { DEFAULT_LOGIN_REDIRECT } from "@/middleware/route"
@@ -15,7 +15,7 @@ type newVerificationReturn = ((token: string) => formFlashProps) | Promise<formF
 export const newVerification = async (token: string) => {   
     const loggedInUser = await getCurrentUser();
 
-    const existingToken = await getVerificationTokenByToken(token);
+    const existingToken = await getEmailVerificationTokenByToken(token);
     if(!existingToken) return { type: "error", message: "Invalid Token" } as formFlashProps;
 
     const hasExpired = new Date() > new Date(existingToken?.expires);
@@ -33,7 +33,7 @@ export const newVerification = async (token: string) => {
         }
     });
 
-    await db.verificationToken.delete({ where: { id: existingToken.id } });
+    await db.emailVerificationToken.delete({ where: { id: existingToken.id } });
 
     try {
         loggedInUser ? redirect("/dashboard") : await signIn("credentials", { 
