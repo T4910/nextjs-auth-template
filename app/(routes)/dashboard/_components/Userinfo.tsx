@@ -15,6 +15,7 @@ import { type EdittedUserSessionDetails } from "@/middleware/auth";
 import { FaUser } from "react-icons/fa"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils";
+import { UserPicture } from "./UserPicture";
  
 export type UserInfoProps = {
     user: EdittedUserSessionDetails
@@ -30,13 +31,10 @@ export function UserInfo({ user }: UserInfoProps) {
     return (
         <Card className="container shadow-md px-0 max-w-fit">
             <CardHeader className="items-center">
-                <Avatar className="size-32">
-                  
-                    <AvatarImage src={user?.image ?? ''} alt={user?.name ?? ""} />
-                    <AvatarFallback>
-                      <FaUser className="size-12" />
-                    </AvatarFallback>
-                </Avatar>
+                <UserPicture 
+                  AvaterClassName="size-32"
+                  IconClassName="size-12"
+                />
             </CardHeader>
             <CardContent className="flex flex-col justify-between items-center space-y-4 px-4 py-2">
               {Object.entries(details).map(([key, value]) => (

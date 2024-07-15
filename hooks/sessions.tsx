@@ -9,5 +9,5 @@ export const useCurrentUser = () => {
 export const useCurrentRole = () => {
     const session = useSession();
 
-    return session.data?.user?.role;
+    return session?.data?.user?.role;
 }

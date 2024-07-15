@@ -1,28 +1,26 @@
-"use client"
 import { 
     Card, CardHeader,
     CardContent,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils";
-import { useCurrentUser } from "@/hooks/sessions"
-import { AdminApiRoute } from "@/app/(routes)/admin/(routes)/templates/_components/ApiRoute"
-
-
-export function ClientUserInfo() {
-    const user = useCurrentUser();
-
+import { getCurrentUser } from "@/lib/auth";
+import { AdminServerAction } from "@/app/(routes)/admin/(routes)/profile/_components/ServerAction";
+ 
+export async function ServerUserInfo() {
+    const user = await getCurrentUser();
+    
     const details = { 
       id: user?.id,
       name: user?.name,
       email: user?.email,
       role: user?.role,
     };
-
+    
     return (
-        <Card className="container shadow-md px-0 max-w-fit">
+        <Card className="container shadow-md px-0 max-w-fit pb-4">
             <CardHeader className="items-center">
-                <h3 className="font-semibold">Client Component</h3>
+                <h3 className="font-semibold">Server Component</h3>
             </CardHeader>
             <CardContent className="flex flex-col justify-between items-center space-y-4 px-4 py-2">
               {Object.entries(details).map(([key, value]) => (
@@ -42,7 +40,7 @@ export function ClientUserInfo() {
                     {user?.is2fEnabled ? "ON" : "OFF"}
                   </Badge>
               </div>
-              <AdminApiRoute />
+              <AdminServerAction />
             </CardContent>
         </Card>
     )

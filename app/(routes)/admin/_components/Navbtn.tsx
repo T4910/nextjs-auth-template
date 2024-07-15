@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ReactNode } from "react";
-import { type ClassValue, clsx } from "clsx"
+import { type ClassValue } from "clsx"
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 

@@ -28,10 +28,6 @@ export async function SideNavbar() {
     profile: {
       icon: <CgProfile className="size-6"/>,
       href: "/admin/profile"
-    },
-    templates: {
-      icon: <MdOutlineMoreHoriz className="size-6"/>,
-      href: "/admin/templates"
     }
   }
 
