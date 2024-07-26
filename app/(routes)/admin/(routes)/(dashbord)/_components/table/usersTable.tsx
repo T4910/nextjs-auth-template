@@ -1,5 +1,4 @@
 "use client"
-
 import * as React from "react"
 import {
   ColumnDef,
@@ -13,6 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import moment from 'moment';
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -42,31 +42,41 @@ import { Pagination } from "./pagination"
 import { DataTable } from "./datatable"
 import { AddUser } from "./addUser"
 import { DatatableTools } from "./datatableTools"
+import { type User } from "@prisma/client"
+import { RowActions } from "./rowActions";
 
 
-export const data = [
-  {
-    id: "m5gr84i9",
-    name: "hello",
-    email: "ken99@yahoo.com",
-    role: "success",
-    creationDate: "2021-09-01T00:00:00Z", // input length stayed on platform
-    status: 'active',
-  },
-  {
-    id: "3u1reuv4",
-    name: "hello",
-    email: "Abe45@gmail.com",
-    role: "success",
-    creationDate: "2021-09-01T00:00:00Z",
-    status: 'active',
-  },
-]
+// export const data = [
+//   {
+//     id: "m5gr84i9",
+//     name: "hello",
+//     email: "ken99@yahoo.com",
+//     role: "success",
+//     creationDate: "2021-09-01T00:00:00Z", // input length stayed on platform
+//     status: 'active',
+//   },
+//   {
+//     id: "3u1reuv4",
+//     name: "hello",
+//     email: "Abe45@gmail.com",
+//     role: "success",
+//     creationDate: "2021-09-01T00:00:00Z",
+//     status: 'active',
+//   },
+// ]
 
-export type reactTableType = tTable<typeof data>
+export type UserData = {
+  id: string
+  name: string
+  email: string
+  role: string
+  status?: "active" | "offline" | "banned"
+  createdAt: string
+}
 
+export type reactTableType = tTable<UserData>
 
-export const columns: ColumnDef<typeof data>[] = [
+export const columns: ColumnDef<UserData>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -90,6 +100,21 @@ export const columns: ColumnDef<typeof data>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Username
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
+  },
+  {
     accessorKey: "email",
     header: ({ column }) => {
       return (
@@ -103,85 +128,112 @@ export const columns: ColumnDef<typeof data>[] = [
       )
     },
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+  },  
+  {
+    accessorKey: "role",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Role
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("role")}</div>,
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "createdAt",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="text-right"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Creation Date
+          <ArrowUpDown className="ml-2 h-4 w-4 invisible" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
+      const numberOfDays = calculateDaysDifference(new Date(row.getValue("createdAt")));
+      const dateJoined = formatDate(new Date(row.getValue("createdAt")));
 
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
-
-      return <div className="text-right font-medium">{formatted}</div>
+      return (
+        <div className="text-right">
+          <p>{dateJoined}</p>
+          <span className="text-xs text-gray-500">
+            Created {numberOfDays} days ago
+          </span>
+        </div>
+      );
     },
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
-
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <RowActions rowInfo={row.original}/>
       )
     },
   },
 ]
 
+type UsersTableProps = { users: UserData[] | null }
 
+export function UsersTable({ users: data }: UsersTableProps ) {
+    const [sorting, setSorting] = React.useState<SortingState>([])
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+    const [rowSelection, setRowSelection] = React.useState({})
 
-export function UsersTable({ users }) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    const table = useReactTable({
+      data: data ?? [],
+      columns,
+      onSortingChange: setSorting,
+      onColumnFiltersChange: setColumnFilters,
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      onColumnVisibilityChange: setColumnVisibility,
+      onRowSelectionChange: setRowSelection,
+      state: {
+        sorting,
+        columnFilters,
+        columnVisibility,
+        rowSelection,
+      },
+    })
 
-  const table = useReactTable({
-    data,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  })
+    return (
+      <div className="w-full bg-white rounded-md px-4">
+        <DatatableTools table={table}/>
+        <DataTable table={table}/>
+        <Pagination table={table} />
+      </div>
+    )
+}
 
-  return (
-    <div className="w-full bg-white rounded-md px-4">
-      <DatatableTools table={table}/>
-      <DataTable table={table}/>
-      <Pagination table={table} />
-    </div>
-  )
+function formatDate(date: Date){
+    const dateJoined = moment(date).format('DD/MM/YYYY');
+
+    return dateJoined;
+}
+
+function calculateDaysDifference(targetDateTime: Date) {
+  // Get the current date and time using moment
+  const now = moment();
+
+  // Parse the target datetime value using moment
+  const targetDate = moment(targetDateTime);
+
+  // Calculate the difference in days between the two dates
+  const differenceInDays = now.diff(targetDate, 'days');
+
+  return differenceInDays;
 }

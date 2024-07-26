@@ -1,6 +1,5 @@
 import { db } from "@/lib/db";
-import { Prisma } from "@prisma/client";
-import { type User } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 
 
 export const getUserByEmail = async (email: string) => {
@@ -30,9 +29,19 @@ export const getUserById = async (id: string) => {
 	}
 };
 
-export const getUsers = async(params: Prisma.UserFindManyArgs<User>) => {
+export async function getUsersForAdmin(params: Prisma.UserFindManyArgs){
 	try {
-		const users = await db.user.findMany(params);
+		const users = await db.user.findMany({
+			...params, 
+			select: {
+				id: true,
+				name: true,
+				email: true,
+				role: true,
+				createdAt: true,
+				// status: true,
+			}
+		});
 		return users;
 		
 	} catch (error) {
