@@ -47,6 +47,7 @@ export const editUserDetails = async (
     })
 
     revalidatePath("/dashboard");
+    revalidatePath("/admin/dashboard");
 
     if(sentEmail) return { type: "success", message: "Confirmation email sent! Changed other details" } as formFlashProps;
     return { type: "success", message: "Successfully Changed Details" } as formFlashProps;

@@ -39,7 +39,7 @@ export async function SideNavbar() {
             aria-hidden="true"
           />
         </Button> */}
-        <div className="p-6 px-7 ml-4 w-1/2 min-h-full rounded-md bg-white z-20 relative top-1/2 -translate-y-1/2 -left-96 lg:left-0 lg:w-fit ease-out delay-150 duration-200">
+        <div className="p-6 px-7 w-1/2 min-h-full rounded-md bg-white z-20 relative top-1/2 -translate-y-1/2 -left-96 lg:left-0 lg:w-fit ease-out delay-150 duration-200">
           <div className="flex flex-col justify-start item-center h-full">
             <Navheading name={user?.name} />
             <div className="flex-grow border-b border-gray-300 space-y-3 flex flex-col justify-start py-3">
