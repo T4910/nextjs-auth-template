@@ -38,7 +38,7 @@ export function ColumnFilter({ table }: columnFilterProps) {
                     column.toggleVisibility(!!value)
                   }
                 >
-                  {column.id}
+                  {(column.id === "createdAt" ? "Creation Date" : column.id)}
                 </DropdownMenuCheckboxItem>
               )
             })}
