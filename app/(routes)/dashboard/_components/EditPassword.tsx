@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { useState, useTransition, type ReactNode } from "react"
+import React, { useState, useTransition, type ReactNode } from "react"
 import { PasswordResetSchema } from "@/middleware/schema"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,9 +22,21 @@ import {
     FormItem, FormLabel, FormMessage
 } from "@/components/ui/form";  
 import { useCurrentUser } from "@/hooks/sessions"
+import { UserData } from "../../admin/(routes)/(dashbord)/_components/table/usersTable"
 
-export function EditPasswordTrigger({ children }: { children: ReactNode }) {
-    const user = useCurrentUser();
+type EditPasswordTriggerProps = { 
+    children: ReactNode;
+    changePasswordAdminInfo: {
+        isAdmin: boolean;
+        userDetails: UserData;
+        callbacks: {
+            setMenu: React.Dispatch<React.SetStateAction<boolean>> | undefined;
+        };
+    } 
+}
+
+export function EditPasswordTrigger({ children, changePasswordAdminInfo }: EditPasswordTriggerProps) {
+    const user = changePasswordAdminInfo.isAdmin ? changePasswordAdminInfo.userDetails : useCurrentUser();
     const [isPending, startTransition] = useTransition();
     const [ flash, setFlash ] = useState<formFlashProps>({ message: "" });
 
@@ -40,7 +52,7 @@ export function EditPasswordTrigger({ children }: { children: ReactNode }) {
         setFlash({ message: "" });
 
         startTransition(() => {
-            changePassword(values, false, user?.email as string)
+            changePassword(values, false, user?.email as string, changePasswordAdminInfo.isAdmin)
             .then(data => {
                 setFlash(data);
                 form.reset(); 
@@ -54,7 +66,10 @@ export function EditPasswordTrigger({ children }: { children: ReactNode }) {
 
     return (
         <Dialog
-            onOpenChange={(open) => !open && onClose()}
+            onOpenChange={(open) => {
+                !open && onClose()
+                changePasswordAdminInfo.callbacks.setMenu && changePasswordAdminInfo.callbacks.setMenu(open)
+            }}
         >
             <DialogTrigger asChild>
                 { children }

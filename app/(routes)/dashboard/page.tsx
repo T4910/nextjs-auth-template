@@ -6,11 +6,15 @@ import { UserInfo } from "./_components/Userinfo";
 export default async function page() {
   const user = await getCurrentUser();
 
+  if(!user) return;
+
+  if(user?.ban) return <div>You've been banned</div>
+
   return (
     <div className="grid place-items-center min-h-screen bg-radial-gradient">
       <div className="space-y-2">
         <Navbar user={user}/>
-        {user && <UserInfo user={user} />}
+        <UserInfo user={user} />
       </div>
     </div>
   )

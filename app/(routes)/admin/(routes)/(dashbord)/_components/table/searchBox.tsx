@@ -20,10 +20,10 @@ export function SearchBox({ table }: searchBoxProps) {
     // const [inputFieldVal, setInputFieldVal] = useState()
 
     return (
-        <>
+        <div className="flex">
             <Input
                 placeholder={`Search ${(searchAttr === "name" ? 'username' : searchAttr)}s...`}
-                className="max-w-sm"
+                className="max-w-md rounded-r-none"
                 autoComplete="off"
                 value={(table?.getColumn(searchAttr)?.getFilterValue() as string) ?? ""}
                 onChange={event => {
@@ -37,7 +37,7 @@ export function SearchBox({ table }: searchBoxProps) {
                 setSearchAttr(value)
               }}
             >
-              <SelectTrigger className="h-8 w-fit">
+              <SelectTrigger className="rounded-l-none w-fit">
                 {/* <SelectValue placeholder={table.getState().pagination.pageSize} /> */}
               </SelectTrigger>
               <SelectContent>
@@ -49,6 +49,6 @@ export function SearchBox({ table }: searchBoxProps) {
                 </SelectItem>
               </SelectContent>
             </Select>
-        </>
+        </div>
     )
 }

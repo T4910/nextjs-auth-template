@@ -1,7 +1,7 @@
 "use server"
 import { z } from "zod";
 import { RequestResetSchema, PasswordResetSchema } from "@/middleware/schema";
-import { getUserByEmail } from "@/data/user";
+import { getUserByEmail, getUserById } from "@/data/user";
 import { formFlashProps } from "@/components/auth/formFlash";
 import { initPassReset, verifyEmail } from "@/lib/mail";
 import { getPasswordResetTokenByToken } from "@/data/tokens";
@@ -31,7 +31,7 @@ export const requestResetPassword = async (values: z.infer<typeof RequestResetSc
 }
 
 // if token is false, ignore the token
-export const changePassword = async (values: z.infer<typeof PasswordResetSchema>, token: string | false, email?: string) => {
+export const changePassword = async (values: z.infer<typeof PasswordResetSchema>, token: string | false, email?: string, admin?: boolean) => {
     let existingToken, hasExpired;
 
     if(!!token){
@@ -45,11 +45,13 @@ export const changePassword = async (values: z.infer<typeof PasswordResetSchema>
     const existingUser = await getUserByEmail((!!token) ? existingToken?.email as string : email as string);
     if(!existingUser) return { type: "error", message: "User not found" } as formFlashProps;
 
-    if(!existingUser?.emailVerified){
-        const emailResponse = await verifyEmail(existingUser?.email, existingUser?.name as string);
-        if(!!emailResponse.error || !emailResponse.res?.includes('OK')) return { type: 'error', message: "Server Error" } as formFlashProps;
-
-        return { type: 'warning', message: "Looks like you haven't confirmed your email. Check your mail." } as formFlashProps;
+    if(!admin){
+        if(!existingUser?.emailVerified){
+            const emailResponse = await verifyEmail(existingUser?.email, existingUser?.name as string);
+            if(!!emailResponse.error || !emailResponse.res?.includes('OK')) return { type: 'error', message: "Server Error" } as formFlashProps;
+    
+            return { type: 'warning', message: "Looks like you haven't confirmed your email. Check your mail." } as formFlashProps;
+        }
     }
     
     const checkedFields = PasswordResetSchema.safeParse(values);

@@ -15,7 +15,7 @@ type InfoCardProps = {
 
 export function InfoCard({ title, amount, footer, icon }: InfoCardProps) {
   return (
-    <Card className="max-h-fit min-w-40 w-[23%] bg-black">
+    <Card className="max-h-fit min-w-40 w-[23%]">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         <>{icon}</>

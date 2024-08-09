@@ -17,30 +17,9 @@ import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-// import { Input } from "@/components/ui/input"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { type Table as tTable } from "@tanstack/react-table";
-import { SearchBox } from "./searchBox"
-import { ColumnFilter } from "./columnFilter"
 import { Pagination } from "./pagination"
 import { DataTable } from "./datatable"
-import { AddUser } from "./addUser"
 import { DatatableTools } from "./datatableTools"
 import { type User } from "@prisma/client"
 import { RowActions } from "./rowActions";
@@ -65,14 +44,7 @@ import { RowActions } from "./rowActions";
 //   },
 // ]
 
-export type UserData = {
-  id: string
-  name: string
-  email: string
-  role: string
-  status?: "active" | "offline" | "banned"
-  createdAt: string
-}
+export type UserData = Omit<User, "password" | "updatedAt">
 
 export type reactTableType = tTable<UserData>
 
@@ -188,8 +160,10 @@ type UsersTableProps = { users: UserData[] | null }
 export function UsersTable({ users: data }: UsersTableProps ) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
+    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+      createdAt: false
+    })
 
     const table = useReactTable({
       data: data ?? [],
@@ -221,7 +195,6 @@ export function UsersTable({ users: data }: UsersTableProps ) {
 
 function formatDate(date: Date){
     const dateJoined = moment(date).format('DD/MM/YYYY');
-
     return dateJoined;
 }
 

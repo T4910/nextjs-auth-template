@@ -9,34 +9,40 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
 import { useState, useTransition, type ReactNode } from "react"
 import { EditUserDetailsSchema } from "@/middleware/schema"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/input"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import Flash, { type formFlashProps } from "@/components/auth/formFlash"
 import {
     Form, FormControl, FormField,
     FormItem, FormLabel, FormMessage,
     FormDescription
 } from "@/components/ui/form";
-import { useCurrentUser } from "@/hooks/sessions"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { editUserDetails } from "@/actions/editUserDetails"
 import { useRouter } from "next/navigation"
 import { filterObjectByKeys } from "@/lib/utils"
 import { type EdittedUserSessionDetails } from "@/middleware/auth"
+// import { type adminInfoType } from "../../admin/(routes)/(dashbord)/_components/table/rowActions"
+import { Roles } from "@prisma/client"
 
-export function EditDetailsTrigger({ children, user }: { children: ReactNode, user: EdittedUserSessionDetails }) {
+type EditDetailsTriggerProps = { 
+    children: ReactNode, 
+    user: EdittedUserSessionDetails 
+    editDetailsAdminInfo: { isAdmin: boolean; callbacks: { setMenu: React.Dispatch<React.SetStateAction<boolean>> | undefined; }; }
+}
+
+export function EditDetailsTrigger({ children, user, editDetailsAdminInfo }: EditDetailsTriggerProps) {
     const router = useRouter();
 
     const [isPending, startTransition] = useTransition();
@@ -47,7 +53,7 @@ export function EditDetailsTrigger({ children, user }: { children: ReactNode, us
         defaultValues: {
             name: user?.name as string,
             email: user?.email as string,
-            // role: user?.role,
+            role: editDetailsAdminInfo.isAdmin ? user?.role : undefined,
             is2fEnabled: user?.is2fEnabled
         }
     })
@@ -60,7 +66,7 @@ export function EditDetailsTrigger({ children, user }: { children: ReactNode, us
         if(Object.keys(edittedValues).length === 0) return;
 
         startTransition(() => {
-            editUserDetails(values, user?.id as string, form.formState.dirtyFields)
+            editUserDetails(values, user?.id as string, form.formState.dirtyFields, editDetailsAdminInfo.isAdmin)
             .then(data => {               
                 setFlash(data as formFlashProps);
                 form.reset(data.type === "success" ? form.getValues() : undefined); 
@@ -74,7 +80,10 @@ export function EditDetailsTrigger({ children, user }: { children: ReactNode, us
 
     return (
         <Dialog
-            onOpenChange={(open) => !open && onClose()}
+            onOpenChange={(open) => {
+                !open && onClose()
+                editDetailsAdminInfo.callbacks.setMenu && editDetailsAdminInfo.callbacks.setMenu(open)
+            }}
         >
             <DialogTrigger asChild>
                 { children }
@@ -143,7 +152,7 @@ export function EditDetailsTrigger({ children, user }: { children: ReactNode, us
                                                 </FormItem>
                                             )}
                                         />
-                                        {/* <FormField
+                                        {editDetailsAdminInfo.isAdmin ? (<FormField
                                             control={form.control}
                                             name="role"
                                             render={({ field }) => (
@@ -173,7 +182,7 @@ export function EditDetailsTrigger({ children, user }: { children: ReactNode, us
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
-                                        /> */}
+                                        />) : null}
                                         <FormField
                                             control={form.control}
                                             name="is2fEnabled"

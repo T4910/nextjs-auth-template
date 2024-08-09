@@ -60,6 +60,9 @@ export const {
             if(account?.provider === 'credentials'){
                 const existingUser = await getUserById(user?.id as string);
     
+                // if user is banned
+                if(existingUser?.ban) return false
+
                 // if email is not verified, do not login
                 if(!existingUser || !existingUser.emailVerified) return false 
 

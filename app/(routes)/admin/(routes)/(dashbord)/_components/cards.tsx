@@ -6,7 +6,7 @@ import { FiUserX } from "react-icons/fi";
 
 export function Cards() {
   return (
-    <div className="flex justify-between h-36">
+    <div className="flex justify-between">
         <InfoCard 
             title="Active Users"
             amount={10}

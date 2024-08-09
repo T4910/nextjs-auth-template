@@ -26,6 +26,10 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     if(!existingUser || !existingUser.email || !existingUser.password){
         return { type: "error", message: "Email does not exist!"};
     }
+    
+    if(existingUser.ban){
+        return { type: "error", message: "This user is banned!"};
+    }
 
     const passwordMatch = await bcrypt.compare(password, existingUser?.password);
     if(!passwordMatch) return { type: 'error', message: "Invalid credentials" } as formFlashProps;
