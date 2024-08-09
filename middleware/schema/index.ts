@@ -16,6 +16,11 @@ export const LoginSchema = z.object({
     )
 });
 
+export const InviteUserSchema = z.object({
+    email: z.string().email({
+        message: "Email is required"
+    }),
+})
 
 export const RegisterSchema = z.object({
     username: z.string().min(1, {
@@ -70,7 +75,7 @@ export const EditUserDetailsSchema = z.object({
     email: z.string().email({
         message: "Email is required"
     }),
-    // role: z.enum([Roles.ADMIN, Roles.USER]),
+    role: z.enum([Roles.ADMIN, Roles.USER]),
     is2fEnabled: z.boolean()
 
 })

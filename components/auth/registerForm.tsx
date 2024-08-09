@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useTransition } from "react";
-import { CardWrapper } from "@/components/cardWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -20,7 +19,8 @@ import {
 } from "@/components/ui/form";
 
 
-export function RegisterForm() {
+export function RegisterForm({ isAdmin }: { isAdmin?: true }) {
+  console.log(isAdmin, 98)
   const [isPending, startTransition] = useTransition();
   const [ flash, setFlash ] = useState<formFlashProps>({ message: "" });
 
@@ -38,7 +38,7 @@ export function RegisterForm() {
     setFlash({ message: "" });
 
     startTransition(() => {
-      register(values)
+      register(values, isAdmin)
         .then(data => setFlash(data));
     })
 
@@ -46,12 +46,6 @@ export function RegisterForm() {
   }
 
   return (
-    <CardWrapper
-        headerLabel="Register"
-        backBtnLabel="Have an account? Login"
-        backBtnHref="/login"
-        showOtherAuth
-    >
         <Form {...form}>
           <form 
             onSubmit={form.handleSubmit(onSubmit)}
@@ -115,7 +109,7 @@ export function RegisterForm() {
                   </FormItem>
                 )}
               />
-              <FormField
+              {isAdmin ? null : (<FormField
                 control={form.control}
                 name="cpassword"
                 render={({ field }) => (
@@ -132,17 +126,16 @@ export function RegisterForm() {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              />)}
             </div>
             <Button
               type="submit"
               className="w-full"
               disabled={isPending}
             >
-              Sign up
+              {isAdmin ? "Add User" : "Sign up"}
             </Button>
           </form>
         </Form>
-    </CardWrapper>
   )
 }

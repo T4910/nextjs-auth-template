@@ -21,7 +21,15 @@ export function getUrlErrorDisplayMessage(error: string | null){
 }
 
 export function generateOTP(){ 
-  return otpGenerator.generate(6, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false}) 
+  return otpGenerator.generate(6, { lowerCaseAlphabets: false, upperCaseAlphabets: false }) 
+}
+
+export function generatePass(){ 
+  return otpGenerator.generate(12, { digits: true, lowerCaseAlphabets: true, upperCaseAlphabets: true, specialChars: true}) 
+}
+
+export function generateUsername(){ 
+  return otpGenerator.generate(18, { lowerCaseAlphabets: true, upperCaseAlphabets: true}) 
 }
 
 export function getDifferencesBetweenObjects(obj1: Record<string, any>, obj2: Record<string, any>): Record<string, any> {

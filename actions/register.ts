@@ -8,7 +8,7 @@ import { getUserByEmail } from "@/data/user";
 import { verifyEmail } from "@/lib/mail";
 
 
-export const register = async (values: z.infer<typeof RegisterSchema>) => {
+export const register = async (values: z.infer<typeof RegisterSchema>, isAdmin: true | undefined) => {
     const checkedFields = RegisterSchema.safeParse(values);
 
     if(!checkedFields) return { type: 'error', message: "Invalid fields!"} as formFlashProps;
@@ -28,6 +28,8 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
             password: hashedPassword
         }
    });
+
+   if(isAdmin) return { type: 'success', message: "User added successfully" } as formFlashProps;
 
     const emailResponse = await verifyEmail(email, newUser?.name as string);
     if(emailResponse.error || !emailResponse.res?.includes('OK')) return { type: 'error', message: "Server Error" } as formFlashProps;

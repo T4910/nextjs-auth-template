@@ -8,6 +8,7 @@ import {
     generatePasswordResetToken,
     generate2FToken
 } from '@/lib/tokens';
+import { InviteEmail } from '@/app/_components/emailTemplates/inviteEmail';
 
 type sendMailProps = {
     recipient: string,
@@ -39,6 +40,20 @@ export const sendMail = async ({
     } catch (error) {
         return { error };
     }
+}
+
+export const sendInviteEmail = async (email:string, password: string, username: string) => {
+    const sent = await sendMail({
+        recipient: email,
+        subject: 'You have been invited to NextAuth Authentication',
+        emailComponent: InviteEmail({
+            username,
+            password,
+            url: `${process.env.WEBSITE_URL}/login`
+        })
+    });
+
+    return sent;
 }
 
 export const sendVerificationEmail = async (email: string, token: string | undefined, username?: string,) => {
