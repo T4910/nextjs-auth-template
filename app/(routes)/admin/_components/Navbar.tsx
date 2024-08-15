@@ -25,10 +25,10 @@ export async function SideNavbar() {
       icon: <MdOutlineSpaceDashboard className="size-6"/>,
       href: "/admin"
     },
-    profile: {
+    templates: {
       icon: <CgProfile className="size-6"/>,
-      href: "/admin/profile"
-    }
+      href: "/admin/templates"
+    },
   }
 
   return (
