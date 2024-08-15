@@ -28,6 +28,7 @@ import { banUsers, deleteUsers, getUserInfo, unbanUsers } from "@/actions/editUs
 import { type UserData } from "./usersTable"
 import { EditDetailsTrigger } from "@/app/(routes)/dashboard/_components/EditDetails"
 import { EditPasswordTrigger } from "@/app/(routes)/dashboard/_components/EditPassword"
+import Link from "next/link"
 
 type RowActionsProps = {
     rowInfo: UserData
@@ -58,7 +59,9 @@ export function RowActions({ rowInfo }: RowActionsProps) {
 
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuItem>View More Details</DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href={`profile/${rowInfo.id}`}>View More Details</Link>
+                    </DropdownMenuItem>
                     <EditUserDetails rowInfo={rowInfo} setMenu={setOpenMenu}/>
                     <ChangeUserPassword rowInfo={rowInfo} setMenu={setOpenMenu}/>
 

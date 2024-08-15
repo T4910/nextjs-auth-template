@@ -26,17 +26,17 @@ import { UserData } from "../../admin/(routes)/(dashbord)/_components/table/user
 
 type EditPasswordTriggerProps = { 
     children: ReactNode;
-    changePasswordAdminInfo: {
+    changePasswordAdminInfo?: {
         isAdmin: boolean;
         userDetails: UserData;
-        callbacks: {
+        callbacks?: {
             setMenu: React.Dispatch<React.SetStateAction<boolean>> | undefined;
         };
     } 
 }
 
 export function EditPasswordTrigger({ children, changePasswordAdminInfo }: EditPasswordTriggerProps) {
-    const user = changePasswordAdminInfo.isAdmin ? changePasswordAdminInfo.userDetails : useCurrentUser();
+    const user = changePasswordAdminInfo?.isAdmin ? changePasswordAdminInfo.userDetails : useCurrentUser();
     const [isPending, startTransition] = useTransition();
     const [ flash, setFlash ] = useState<formFlashProps>({ message: "" });
 
@@ -52,7 +52,7 @@ export function EditPasswordTrigger({ children, changePasswordAdminInfo }: EditP
         setFlash({ message: "" });
 
         startTransition(() => {
-            changePassword(values, false, user?.email as string, changePasswordAdminInfo.isAdmin)
+            changePassword(values, false, user?.email as string, changePasswordAdminInfo?.isAdmin)
             .then(data => {
                 setFlash(data);
                 form.reset(); 
@@ -68,7 +68,7 @@ export function EditPasswordTrigger({ children, changePasswordAdminInfo }: EditP
         <Dialog
             onOpenChange={(open) => {
                 !open && onClose()
-                changePasswordAdminInfo.callbacks.setMenu && changePasswordAdminInfo.callbacks.setMenu(open)
+                changePasswordAdminInfo?.callbacks?.setMenu && changePasswordAdminInfo?.callbacks.setMenu(open)
             }}
         >
             <DialogTrigger asChild>

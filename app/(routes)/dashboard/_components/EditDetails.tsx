@@ -39,7 +39,7 @@ import { Roles } from "@prisma/client"
 type EditDetailsTriggerProps = { 
     children: ReactNode, 
     user: EdittedUserSessionDetails 
-    editDetailsAdminInfo: { isAdmin: boolean; callbacks: { setMenu: React.Dispatch<React.SetStateAction<boolean>> | undefined; }; }
+    editDetailsAdminInfo?: { isAdmin: boolean; callbacks?: { setMenu: React.Dispatch<React.SetStateAction<boolean>> | undefined; }; }
 }
 
 export function EditDetailsTrigger({ children, user, editDetailsAdminInfo }: EditDetailsTriggerProps) {
@@ -53,7 +53,7 @@ export function EditDetailsTrigger({ children, user, editDetailsAdminInfo }: Edi
         defaultValues: {
             name: user?.name as string,
             email: user?.email as string,
-            role: editDetailsAdminInfo.isAdmin ? user?.role : undefined,
+            role: editDetailsAdminInfo?.isAdmin ? user?.role : undefined,
             is2fEnabled: user?.is2fEnabled
         }
     })
@@ -66,7 +66,7 @@ export function EditDetailsTrigger({ children, user, editDetailsAdminInfo }: Edi
         if(Object.keys(edittedValues).length === 0) return;
 
         startTransition(() => {
-            editUserDetails(values, user?.id as string, form.formState.dirtyFields, editDetailsAdminInfo.isAdmin)
+            editUserDetails(values, user?.id as string, form.formState.dirtyFields, editDetailsAdminInfo?.isAdmin)
             .then(data => {               
                 setFlash(data as formFlashProps);
                 form.reset(data.type === "success" ? form.getValues() : undefined); 
@@ -82,7 +82,7 @@ export function EditDetailsTrigger({ children, user, editDetailsAdminInfo }: Edi
         <Dialog
             onOpenChange={(open) => {
                 !open && onClose()
-                editDetailsAdminInfo.callbacks.setMenu && editDetailsAdminInfo.callbacks.setMenu(open)
+                editDetailsAdminInfo?.callbacks?.setMenu && editDetailsAdminInfo?.callbacks.setMenu(open)
             }}
         >
             <DialogTrigger asChild>
@@ -152,7 +152,7 @@ export function EditDetailsTrigger({ children, user, editDetailsAdminInfo }: Edi
                                                 </FormItem>
                                             )}
                                         />
-                                        {editDetailsAdminInfo.isAdmin ? (<FormField
+                                        {editDetailsAdminInfo?.isAdmin ? (<FormField
                                             control={form.control}
                                             name="role"
                                             render={({ field }) => (

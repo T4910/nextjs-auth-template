@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { type Prisma } from "@prisma/client";
 
-
+// Remember to treat this functions with authorization for security reasons
 export const getUserByEmail = async (email: string) => {
 	try {
 		const user = await db.user.findUnique({ where: { email } });
@@ -35,7 +35,7 @@ export async function getUsersForAdmin(params: Prisma.UserFindManyArgs){
 			...params, 
 			omit: {
 				password: true,
-				updatedAt: true,
+				// updatedAt: true,
 			}
 		});
 		return users;
