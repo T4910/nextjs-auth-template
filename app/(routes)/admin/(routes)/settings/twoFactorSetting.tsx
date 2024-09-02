@@ -1,11 +1,4 @@
 "use client"
-import {
-    Form, FormControl, FormField,
-    FormItem, FormLabel, FormMessage,
-    FormDescription
-} from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Switch } from "@/components/ui/switch"
 import { useTransition, useRef, useState } from "react";
@@ -50,9 +43,10 @@ export function TwoFactorSetting() {
                     checked={checked}
                     onCheckedChange={(value) => {
                         setChecked(value);
-                        onSubmit({
+                        if(user) onSubmit({
                             name: "",
                             email: "",
+                            role: user?.role,
                             is2fEnabled: value
                         });
                     }}
